@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>CONTROL_CENTER // FIRE_EAGLE</title>
+    <style>
+        body { background: #050000; color: #ff0000; font-family: 'Courier New', monospace; padding: 20px; }
+        .panel { border: 2px solid #ff0000; padding: 20px; box-shadow: 0 0 15px #500; }
+        button { background: #200; color: #f00; border: 1px solid #f00; padding: 10px 20px; cursor: pointer; margin: 5px; }
+        button:hover { background: #f00; color: #000; }
+        .status { margin-top: 20px; padding: 10px; border-top: 1px solid #300; }
+    </style>
+</head>
+<body>
+    <div class="panel">
+        <h1>COMMAND_CONSOLE</h1>
+        <p>Target Status: <span id="target-status">Idle</span></p>
+        <p>Login Attempts: <span id="attempts-count">0</span></p>
+        <hr>
+        <button onclick="triggerError(true)">AKTIVASI ERROR</button>
+        <button onclick="triggerError(false)">RESET NORMAL</button>
+        <br>
+        <button onclick="triggerAudio(true)">NYALAKAN AUDIO</button>
+        <button onclick="triggerAudio(false)">MATIKAN AUDIO</button>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+
+    <script>
+        const firebaseConfig = {  
+  apiKey: "AIzaSyCogQ9FOG_p9N52O-2vLObWDBXyjQgDVcE",
+  authDomain: "phantom-glitch-project.firebaseapp.com",
+  databaseURL: "https://phantom-glitch-project-default-rtdb.firebaseio.com",
+  projectId: "phantom-glitch-project",
+  storageBucket: "phantom-glitch-project.firebasestorage.app",
+  messagingSenderId: "475198183760",
+  appId: "1:475198183760:web:f73e3cf7e3b471baa97455"
+}; 
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+
+        function triggerError(state) { db.ref('system/error').set(state); }
+        function triggerAudio(state) { db.ref('system/audio').set(state); }
+
+        // Pantau percobaan login dari si penerima
+        db.ref('system/attempts').on('value', (snap) => {
+            document.getElementById('attempts-count').innerText = snap.val() || 0;
+        });
+    </script>
+</body>
+</html>
